@@ -1,0 +1,92 @@
+Given two strings S1 and S2, write a program to print the number of times the first string S1 appears in the second string S2 as a substring. For example if S1 is “atg” and S2 is “batgccatgatatga”, then the program should print 3. Program should work correctlyfor all possible inputs. DO NOT use any of the library functions defined under strings described above.
+import java.util.Scanner;
+
+public class SubstringCounter {
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Enter the first string S1: ");
+        String S1 = sc.nextLine();
+        System.out.println("Enter the second string S2: ");
+        String S2 = sc.nextLine();
+
+        int count = countSubstringOccurrences(S1, S2);
+        System.out.println("S1 appears " + count + " times in S2 as a substring.");
+    }
+
+    public static int countSubstringOccurrences(String S1, String S2) {
+        int count = 0;
+        int n = S2.length();
+        int m = S1.length();
+
+        for (int i = 0; i <= n - m; i++) {
+            if (isSubstringAt(S2, S1, i)) {
+                count++;
+                i += m - 1;
+            }
+        }
+
+        return count;
+    }
+
+    private static boolean isSubstringAt(String S2, String S1, int start) {
+        int low = 0;
+        int high = S1.length() - 1;
+
+        while (low <= high) {
+            int mid = (low + high) / 2;
+            int charIndex = start + mid;
+            if (S1.charAt(mid) == S2.charAt(charIndex)) {
+                if (mid == 0 || S1.charAt(mid - 1) != S2.charAt(charIndex - 1)) {
+                    return true;
+                } else {
+                    high = mid - 1; 
+                }
+            } else if (S1.charAt(mid) < S2.charAt(charIndex)) {
+                low = mid + 1;
+            } else {
+                high = mid - 1;
+            }
+        }
+
+        return false;
+    }
+}
+
+The absolute distance between two integers x1 and x2 is given by | x2 – x1 |. Write a function which sorts an array x[ ] of n integers in ascending order of their absolute distances with a given number z. For example, given x[ ] = {9, 1, 12, 4, 2} and z = 6, the sorted array will be x[ ] = {4, 9, 2, 1, 12}. Note that 4 is closest to 6, and 12 is farthest from 6, in terms of absolute distances. The function will
+have the following prototype:
+void dist_sort( int x[ ], int n, int z ) ;
+
+import java.util.Arrays;
+import java.util.Comparator;
+
+public class DistanceSort {
+
+    public static void main(String[] args) {
+        int[] x = {9, 1, 12, 4, 2};
+        int z = 6;
+
+        distSort(x, x.length, z);
+
+        System.out.println("Sorted array: " + Arrays.toString(x));
+    }
+
+    public static void distSort(int[] x, int n, int z) {
+        // Convert the array to Integer array for custom sorting
+        Integer[] xInteger = new Integer[n];
+        for (int i = 0; i < n; i++) {
+            xInteger[i] = x[i];
+        }
+
+        // Custom Comparator to sort based on the absolute distance from z
+        Comparator<Integer> comparator = (a, b) -> Math.abs(a - z) - Math.abs(b - z);
+
+        // Sort the array using the custom Comparator
+        Arrays.sort(xInteger, comparator);
+
+        // Convert back to int array
+        for (int i = 0; i < n; i++) {
+            x[i] = xInteger[i];
+        }
+    }
+}
